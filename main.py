@@ -17,10 +17,15 @@ def validate(text: str) -> None:
         raise ValueError("entry must not be only whitespace")
     if "\n" in body or "\r" in body:
         raise ValueError("entry must be a single line")
-def main() -> None:
-    validate(TEXT)
+    body.encode("utf-8")
+def write_entry(text: str) -> Path:
     out_dir = Path(os.environ.get("MAKEFUN_OUTPUT_DIR") or "/output")
     out_dir.mkdir(parents=True, exist_ok=True)
-    (out_dir / "entry.txt").write_bytes(TEXT.encode("utf-8"))
+    target = out_dir / "entry.txt"
+    target.write_bytes(text.encode("utf-8"))
+    return target
+def main() -> None:
+    validate(TEXT)
+    write_entry(TEXT)
 if __name__ == "__main__":
     main()
